@@ -42,7 +42,7 @@ inputs:
   rapise_version:
     description: 'Rapise version to install'
     required: false
-    default: '9.0.35.20'
+    default: '9.0.35.30'
   set_screen_size:
     description: 'Set screen resolution for test execution'
     required: false
