@@ -21,13 +21,22 @@ Store your Spira API Key as a GitHub Secret so it is never exposed in workflow f
 ## Quick Start
 
 ```yaml
-- uses: Inflectra/rapiselauncher-win-action@v1
-  with:
-    spira_url: 'https://myserver.spiraservice.net/'
-    spira_test_set_id: '925,1266'
-    spira_username: 'myuser'
-    spira_api_key: ${{ secrets.SPIRA_API_KEY }}
-    spira_automation_host: GHA
+name: Run Rapise Tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: Inflectra/rapiselauncher-win-action@v2
+        with:
+          spira_url: 'https://myserver.spiraservice.net/'
+          spira_test_set_id: '925,1266'
+          spira_username: 'myuser'
+          spira_api_key: ${{ secrets.SPIRA_API_KEY }}
+          spira_automation_host: GHA
 ```
 
 ## Usage
@@ -48,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: Inflectra/rapiselauncher-win-action@v1
+      - uses: Inflectra/rapiselauncher-win-action@v2
         with:
           spira_config: '${{ github.workspace }}/RepositoryConnection.xml'
           spira_test_set_id: '925,1266'
@@ -75,7 +84,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: Inflectra/rapiselauncher-win-action@v1
+      - uses: Inflectra/rapiselauncher-win-action@v2
         with:
           spira_url: 'https://myserver.spiraservice.net/9/TestSet/925.aspx'
           spira_username: 'myuser'
@@ -88,13 +97,13 @@ jobs:
 Record a video of the test execution and upload it to the Spira Test Run:
 
 ```yaml
-- uses: Inflectra/rapiselauncher-win-action@v1
-  with:
-    spira_url: 'https://myserver.spiraservice.net/9/TestSet/925.aspx'
-    spira_username: 'myuser'
-    spira_api_key: ${{ secrets.SPIRA_API_KEY }}
-    record_video: 'true'
-    record_video_options: '-noaudio -bitRate 512 -frameRate 2'
+      - uses: Inflectra/rapiselauncher-win-action@v2
+        with:
+          spira_url: 'https://myserver.spiraservice.net/9/TestSet/925.aspx'
+          spira_username: 'myuser'
+          spira_api_key: ${{ secrets.SPIRA_API_KEY }}
+          record_video: 'true'
+          record_video_options: '-noaudio -bitRate 512 -frameRate 2'
 ```
 
 The default `record_video_options` are `-noaudio -bitRate 512 -frameRate 2`. Adjust as needed.
@@ -104,14 +113,14 @@ The default `record_video_options` are `-noaudio -bitRate 512 -frameRate 2`. Adj
 Set a custom screen resolution for the runner before test execution:
 
 ```yaml
-- uses: Inflectra/rapiselauncher-win-action@v1
-  with:
-    spira_url: 'https://myserver.spiraservice.net/9/TestSet/925.aspx'
-    spira_username: 'myuser'
-    spira_api_key: ${{ secrets.SPIRA_API_KEY }}
-    set_screen_size: 'true'
-    screen_width: '1920'
-    screen_height: '1080'
+      - uses: Inflectra/rapiselauncher-win-action@v2
+        with:
+          spira_url: 'https://myserver.spiraservice.net/9/TestSet/925.aspx'
+          spira_username: 'myuser'
+          spira_api_key: ${{ secrets.SPIRA_API_KEY }}
+          set_screen_size: 'true'
+          screen_width: '1920'
+          screen_height: '1080'
 ```
 
 ### Video Recording with Custom Screen Size
@@ -119,15 +128,15 @@ Set a custom screen resolution for the runner before test execution:
 Combine both features for full desktop UI test coverage:
 
 ```yaml
-- uses: Inflectra/rapiselauncher-win-action@v1
-  with:
-    spira_url: 'https://myserver.spiraservice.net/9/TestSet/925.aspx'
-    spira_username: 'myuser'
-    spira_api_key: ${{ secrets.SPIRA_API_KEY }}
-    set_screen_size: 'true'
-    screen_width: '1920'
-    screen_height: '1080'
-    record_video: 'true'
+      - uses: Inflectra/rapiselauncher-win-action@v2
+        with:
+          spira_url: 'https://myserver.spiraservice.net/9/TestSet/925.aspx'
+          spira_username: 'myuser'
+          spira_api_key: ${{ secrets.SPIRA_API_KEY }}
+          set_screen_size: 'true'
+          screen_width: '1920'
+          screen_height: '1080'
+          record_video: 'true'
 ```
 
 ### Screenshots
@@ -143,21 +152,21 @@ capture_screenshots: 'false'
 Use `timeout_minutes` to kill the launcher if it exceeds the specified duration:
 
 ```yaml
-- uses: Inflectra/rapiselauncher-win-action@v1
-  with:
-    spira_url: 'https://myserver.spiraservice.net/9/TestSet/925.aspx'
-    spira_username: 'myuser'
-    spira_api_key: ${{ secrets.SPIRA_API_KEY }}
-    timeout_minutes: 10
+      - uses: Inflectra/rapiselauncher-win-action@v2
+        with:
+          spira_url: 'https://myserver.spiraservice.net/9/TestSet/925.aspx'
+          spira_username: 'myuser'
+          spira_api_key: ${{ secrets.SPIRA_API_KEY }}
+          timeout_minutes: 10
 ```
 
 ### Specifying Rapise Version
 
 ```yaml
-- uses: Inflectra/rapiselauncher-win-action@v1
-  with:
-    rapise_version: '9.0.35.20'
-    # ... other inputs
+      - uses: Inflectra/rapiselauncher-win-action@v2
+        with:
+          rapise_version: '9.0.35.37'
+          # ... other inputs
 ```
 
 ### Git Root for Spira Tests Stored in Git
@@ -165,10 +174,10 @@ Use `timeout_minutes` to kill the launcher if it exceeds the specified duration:
 If your Rapise tests are stored in a Git repository connected to Spira, the action automatically sets `GITROOT` to `$GITHUB_WORKSPACE`. Override it with `git_root` if needed:
 
 ```yaml
-- uses: Inflectra/rapiselauncher-win-action@v1
-  with:
-    git_root: '${{ github.workspace }}/tests'
-    # ... other inputs
+      - uses: Inflectra/rapiselauncher-win-action@v2
+        with:
+          git_root: '${{ github.workspace }}/tests'
+          # ... other inputs
 ```
 
 ### Artifacts
@@ -191,7 +200,7 @@ upload_artifacts: 'false'
 | `spira_test_set_id` | | Test Set ID(s), comma-separated (e.g. `925,1266`). |
 | `spira_automation_host` | *(hostname)* | Automation Host Token. Defaults to runner hostname. |
 | `install_rapise` | `true` | Whether to install Rapise. |
-| `rapise_version` | `9.0.35.20` | Rapise version to install. |
+| `rapise_version` | `9.0.35.37` | Rapise version to install. |
 | `set_screen_size` | `false` | Set screen resolution before execution. |
 | `screen_width` | `1920` | Screen width (1024–7680). |
 | `screen_height` | `1080` | Screen height (768–4320). |

@@ -45,7 +45,7 @@ try {
     # Parse project ID and test set ID from spira_url if it contains the full path
     # Full form: https://server/9/TestSet/925.aspx
     # Short form: https://server/ (requires explicit project_id and test_set_id)
-    if ($spiraUrl -match '^(https?://.+?)/(\d+)/TestSet/(\d+)\.aspx$') {
+    if ($spiraUrl -match '^(https?://.+?)/+(\d+)/TestSet/(\d+)\.aspx$') {
         $spiraUrl = $Matches[1] + '/'
         if (-not $spiraProjectId) { $spiraProjectId = $Matches[2] }
         if (-not $spiraTestSetId) { $spiraTestSetId = $Matches[3] }
@@ -71,6 +71,7 @@ try {
     $timeoutMinutes = 0
     if ($env:INPUT_TIMEOUT_MINUTES) { $timeoutMinutes = [int]$env:INPUT_TIMEOUT_MINUTES }
     $gitRoot = $env:INPUT_GIT_ROOT
+    $report = $env:INPUT_REPORT
 
     Write-Host "spiraProjectId: $spiraProjectId"
     Write-Host "spiraTestSetId: $spiraTestSetId"
@@ -153,6 +154,10 @@ try {
     if ($recordVideo) {
         $ArgumentList += "-param:g_enableVideoRecording=true"
         $ArgumentList += "-param:g_videoRecorderArguments=$recordVideoOptions"
+    }
+
+    if ($report) {
+        $ArgumentList += "-report:$report"
     }
 
     $ArgumentListStr = '"' + ($ArgumentList -join '" "') + '"'
